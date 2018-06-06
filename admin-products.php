@@ -43,4 +43,19 @@ $app->post("/admin/products/create", function(){
 
 });
 
+$app->get("/admin/products/:idproduct", function($idproduct){
+	User::verifyLogin();
+	
+	$product = new Product();
+	
+	$product->get((int)$idproduct);
+	
+	$page = new PageAdmin();
+	
+	$page->setTpl("products-update", [
+		'product'=>$product->getValues()
+	]);
+
+});
+
 ?>
