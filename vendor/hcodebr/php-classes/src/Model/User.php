@@ -134,21 +134,22 @@ class User extends Model {
 
 	public function save()
 	{
-
+		
 		$sql = new Sql();
 
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
-			"desperson"=>$this->utf8_decode($this->getdesperson()),
-			"deslogin"=>$this->getdeslogin(),
-			"despassword"=>User::getPasswordHash($this->getdespassword()),
-			"desemail"=>$this->getdesemail(),
-			"nrphone"=>$this->getnrphone(),
-			"inadmin"=>$this->getinadmin()
+			":desperson"=>utf8_decode($this->getdesperson()),
+			":deslogin"=>$this->getdeslogin(),
+			":despassword"=>User::getPasswordHash($this->getdespassword()),
+			":desemail"=>$this->getdesemail(),
+			":nrphone"=>$this->getnrphone(),
+			":inadmin"=>$this->getinadmin()
 		));
 
 		$this->setData($results[0]);
 
 	}
+
 
 	public function get($iduser)
 	{
@@ -378,9 +379,11 @@ class User extends Model {
 	public static function checkLoginExist($login)
 	{
 		$sql = new Sql();
+
 		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", [
 			':deslogin'=>$login
 		]);
+
 		return (count($results) > 0);
 	}
 
