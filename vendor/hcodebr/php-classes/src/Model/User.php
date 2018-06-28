@@ -217,19 +217,23 @@ class User extends Model {
 	    else
 	    {
 	        $data = $results[0];
+
 	        $results2 = $sql->select("CALL sp_userspasswordsrecoveries_create(:iduser, :desip)", array(
 	            ":iduser"=>$data["iduser"],
 	            ":desip"=>$_SERVER["REMOTE_ADDR"]
 	        ));
+
 	        if (count($results2) === 0)
 	        {
+
 	            throw new \Exception("Não foi possível recuperar a senha");
 	 
 	        }
 	        else
 	        {
+
 	            $dataRecovery = $results2[0];
-	            $dataRecovery = $results2[0];
+	            
 	            $iv = random_bytes(openssl_cipher_iv_length('aes-256-cbc'));
 	            $code = openssl_encrypt($dataRecovery['idrecovery'], 'aes-256-cbc', User::SECRET, 0, $iv);
 	            $result = base64_encode($iv.$code);
@@ -242,12 +246,13 @@ class User extends Model {
 	                "name"=>$data["desperson"],
 	                "link"=>$link
 	            )); 
+
 	            $mailer->send();
+
 	            return $link;
 	        }
 	    }
 	}
-
 
 	public static function validForgotDecrypt($result)
 	{
